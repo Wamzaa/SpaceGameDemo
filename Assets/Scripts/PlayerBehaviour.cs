@@ -8,10 +8,73 @@ public class PlayerBehaviour : MonoBehaviour
     public float distCamera;
     public GameObject bulletPrefab;
 
+    public SpaceShip ship;
+
     private float timer;
+
+    private float shipResist;
+    private float shipFirePower;
+    private Vector2 shipSpeed;
 
     void Start()
     {
+        ShipComponent geckoReactor = new ShipComponent();
+        geckoReactor.name = "geckoReactor";
+        geckoReactor.latSpeed = 0.0f;
+        geckoReactor.forwSpeed = 20.0f;
+        geckoReactor.firePower = 0.0f;
+        geckoReactor.compResist = 50.0f;
+
+        ShipComponent chameleonReactor = new ShipComponent();
+        chameleonReactor.name = "chameleonReactor";
+        chameleonReactor.latSpeed = 7.0f;
+        chameleonReactor.forwSpeed = 7.0f;
+        chameleonReactor.firePower = 0.0f;
+        chameleonReactor.compResist = 40.0f;
+
+        ShipComponent rafalA12 = new ShipComponent();
+        rafalA12.name = "rafal-A12";
+        rafalA12.latSpeed = 0.0f;
+        rafalA12.forwSpeed = 0.0f;
+        rafalA12.firePower = 30.0f;
+        rafalA12.compResist = 40.0f;
+
+        ShipComponent rafalC53 = new ShipComponent();
+        rafalC53.name = "rafal-C53";
+        rafalC53.latSpeed = 0.0f;
+        rafalC53.forwSpeed = 0.0f;
+        rafalC53.firePower = 45.0f;
+        rafalC53.compResist = 60.0f;
+
+        ShipFrame frame1 = new ShipFrame();
+        frame1.name = "basic44frame";
+        frame1.nbComponents = 4;
+        List<ShipComponent> listComp1 = new List<ShipComponent>();
+        listComp1.Add(geckoReactor);
+        listComp1.Add(geckoReactor);
+        listComp1.Add(rafalA12);
+        listComp1.Add(rafalA12);
+        frame1.components = listComp1;
+
+        ShipFrame frame2 = new ShipFrame();
+        frame2.name = "basic44frame";
+        frame2.nbComponents = 4;
+        List<ShipComponent> listComp2 = new List<ShipComponent>();
+        listComp2.Add(chameleonReactor);
+        listComp2.Add(chameleonReactor);
+        listComp2.Add(rafalC53);
+        listComp2.Add(rafalC53);
+        frame2.components = listComp2;
+
+        ship = new SpaceShip();
+        ship.frame = frame2;
+
+        shipResist = ship.GetShipResist();
+        shipSpeed = ship.GetShipSpeed();
+        shipFirePower = ship.GetShipFirePower();
+
+
+
         Vector3 initPosCam = new Vector3(this.transform.position.x, this.transform.position.y, transform.position.z - distCamera);
         camera.transform.position = initPosCam;
         timer = 0.0f;
@@ -26,21 +89,7 @@ public class PlayerBehaviour : MonoBehaviour
         cursorPosition.z = distCamera;
         Vector3 cursorProjection = camera.ScreenToWorldPoint(cursorPosition);
 
-        //PLAYER ROTATION ---------------
-
-        /*Vector3 dirToCursor = cursorProjection - this.transform.position;
-        dirToCursor = dirToCursor.normalized;
-        float newAngle = Mathf.Asin(Vector3.Dot(Vector3.Cross(transform.up, dirToCursor), Vector3.fwd));
-        if (Vector3.Dot(transform.up, dirToCursor) < 0)
-        {
-            newAngle = Mathf.PI - newAngle;
-        }
-        newAngle = newAngle * 180.0f / Mathf.PI;
-        Vector3 rot = transform.rotation.eulerAngles;
-        rot.z = SmoothRotation(rot.z, newAngle, 5.0f, Time.deltaTime);
-        transform.rotation = Quaternion.Euler(rot);*/
-
-        //PLAYER POSITION ---------------
+        //PLAYER POSITION & ROTATION ---------------
         Vector2 playerMovement = new Vector2();
 
         if (Input.GetKey(KeyCode.Z))
@@ -60,16 +109,16 @@ public class PlayerBehaviour : MonoBehaviour
             playerMovement.x -= 1.0f;
         }
 
-        float rotSpeed = 10.0f;
+        float rotSpeed = shipSpeed.y;
         if(playerMovement.y != 0.0f)
         {
-            rotSpeed = Mathf.Sign(playerMovement.y) * 50.0f;
+            rotSpeed = Mathf.Sign(playerMovement.y) * 3.0f * shipSpeed.y ;
         }
         Vector3 rotVec = transform.rotation.eulerAngles;
         rotVec.z += rotSpeed * Time.deltaTime * (- playerMovement.x);
         this.transform.rotation = Quaternion.Euler(rotVec);
 
-        Vector3 moveVec = 5.0f * Time.deltaTime * (playerMovement.y * transform.up);
+        Vector3 moveVec = shipSpeed.x * Time.deltaTime * (playerMovement.y * transform.up);
         this.transform.position += moveVec;
 
         //CANON ----------------
@@ -112,13 +161,6 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 rot = newBullet.transform.rotation.eulerAngles;
         rot.z = angle;
         newBullet.transform.rotation = Quaternion.Euler(rot);
-    }
-
-    public float SmoothRotation(float dep, float angle, float speedRot, float dt)
-    {
-        float zerAngle = GetAngleZeroCentered(angle);
-        float res = dep + speedRot * dt * zerAngle;
-        return res;
     }
 
     public Vector3 SmoothTranslation(Vector3 dep, Vector3 arr, float speed, float dt)
