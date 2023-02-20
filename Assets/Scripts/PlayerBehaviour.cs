@@ -73,7 +73,8 @@ public class PlayerBehaviour : MonoBehaviour
         shipSpeed = ship.GetShipSpeed();
         shipFirePower = ship.GetShipFirePower();
 
-
+        GameObject rootShip = SpaceShipSpawner.Spawn(ship);
+        rootShip.transform.position = this.transform.position;
 
         Vector3 initPosCam = new Vector3(this.transform.position.x, this.transform.position.y, transform.position.z - distCamera);
         camera.transform.position = initPosCam;
