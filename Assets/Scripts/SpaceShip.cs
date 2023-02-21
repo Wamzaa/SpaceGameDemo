@@ -27,6 +27,7 @@ public class SpaceShip
             totalSpeed.x += comp.forwSpeed;
             totalSpeed.y += comp.latSpeed;
         }
+        totalSpeed = (1.0f / Mathf.Sqrt(GetShipWeight())) * totalSpeed;
         return totalSpeed;
     }
 
@@ -38,6 +39,16 @@ public class SpaceShip
             totalFirePower += comp.firePower;
         }
         return totalFirePower;
+    }
+
+    public float GetShipWeight()
+    {
+        float totalWeight = 0.0f;
+        foreach (ShipComponent comp in frame.components)
+        {
+            totalWeight += comp.weight;
+        }
+        return totalWeight;
     }
 }
 
@@ -57,4 +68,5 @@ public class ShipComponent
     public float forwSpeed;
     public float latSpeed;
     public float compResist;
+    public float weight;
 }

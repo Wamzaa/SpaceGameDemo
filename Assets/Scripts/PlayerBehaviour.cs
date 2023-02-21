@@ -15,6 +15,7 @@ public class PlayerBehaviour : MonoBehaviour
     private float shipResist;
     private float shipFirePower;
     private Vector2 shipSpeed;
+    private float shipWeight;
 
     void Start()
     {
@@ -24,6 +25,7 @@ public class PlayerBehaviour : MonoBehaviour
         geckoReactor.forwSpeed = 20.0f;
         geckoReactor.firePower = 0.0f;
         geckoReactor.compResist = 50.0f;
+        geckoReactor.weight = 15.0f;
 
         ShipComponent chameleonReactor = new ShipComponent();
         chameleonReactor.name = "chameleonReactor";
@@ -31,6 +33,7 @@ public class PlayerBehaviour : MonoBehaviour
         chameleonReactor.forwSpeed = 7.0f;
         chameleonReactor.firePower = 0.0f;
         chameleonReactor.compResist = 40.0f;
+        chameleonReactor.weight = 10.0f;
 
         ShipComponent rafalA12 = new ShipComponent();
         rafalA12.name = "rafal-A12";
@@ -38,6 +41,7 @@ public class PlayerBehaviour : MonoBehaviour
         rafalA12.forwSpeed = 0.0f;
         rafalA12.firePower = 30.0f;
         rafalA12.compResist = 40.0f;
+        rafalA12.weight = 10.0f;
 
         ShipComponent rafalC53 = new ShipComponent();
         rafalC53.name = "rafal-C53";
@@ -45,6 +49,7 @@ public class PlayerBehaviour : MonoBehaviour
         rafalC53.forwSpeed = 0.0f;
         rafalC53.firePower = 45.0f;
         rafalC53.compResist = 60.0f;
+        rafalC53.weight = 20.0f;
 
         ShipFrame frame1 = new ShipFrame();
         frame1.name = "basic44frame";
@@ -61,20 +66,38 @@ public class PlayerBehaviour : MonoBehaviour
         frame2.nbComponents = 4;
         List<ShipComponent> listComp2 = new List<ShipComponent>();
         listComp2.Add(chameleonReactor);
-        listComp2.Add(chameleonReactor);
+        listComp2.Add(chameleonReactor); 
         listComp2.Add(rafalC53);
         listComp2.Add(rafalC53);
         frame2.components = listComp2;
 
+        ShipFrame frame3 = new ShipFrame();
+        frame3.name = "y-shaped262frame";
+        frame3.nbComponents = 8;
+        List<ShipComponent> listComp3 = new List<ShipComponent>();
+        listComp3.Add(chameleonReactor);
+        listComp3.Add(geckoReactor);
+        listComp3.Add(chameleonReactor);
+        listComp3.Add(geckoReactor);
+        listComp3.Add(chameleonReactor);
+        listComp3.Add(chameleonReactor);
+        listComp3.Add(rafalC53);
+        listComp3.Add(rafalC53);
+        listComp3.Add(rafalA12);
+        listComp3.Add(rafalA12);
+        frame3.components = listComp3;
+
         ship = new SpaceShip();
-        ship.frame = frame2;
+        ship.frame = frame3;
 
         shipResist = ship.GetShipResist();
         shipSpeed = ship.GetShipSpeed();
         shipFirePower = ship.GetShipFirePower();
+        shipWeight = ship.GetShipWeight();
 
         GameObject rootShip = SpaceShipSpawner.Spawn(ship);
         rootShip.transform.position = this.transform.position;
+        rootShip.transform.parent = this.transform;
 
         Vector3 initPosCam = new Vector3(this.transform.position.x, this.transform.position.y, transform.position.z - distCamera);
         camera.transform.position = initPosCam;
