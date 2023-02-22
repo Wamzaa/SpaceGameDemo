@@ -354,11 +354,13 @@ MonoBehaviour:
   camera: {fileID: 519420031}
   distCamera: 10
   bulletPrefab: {fileID: 1488073629091927856, guid: bcaae052d64288d4aab835459a7ed896, type: 3}
+  pointerPrefab: {fileID: 4303675759835351094, guid: fe6946dd2de646643937d3875de68d1f, type: 3}
   ship:
     frame:
       name: 
       nbComponents: 0
       components: []
+  pointer: {fileID: 0}
 --- !u!212 &480433643
 SpriteRenderer:
   m_ObjectHideFlags: 0

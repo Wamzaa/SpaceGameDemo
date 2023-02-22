@@ -7,8 +7,10 @@ public class PlayerBehaviour : MonoBehaviour
     public Camera camera;
     public float distCamera;
     public GameObject bulletPrefab;
+    public GameObject pointerPrefab;
 
     public SpaceShip ship;
+    public GameObject pointer;
 
     private float timer;
 
@@ -88,7 +90,7 @@ public class PlayerBehaviour : MonoBehaviour
         frame3.components = listComp3;
 
         ship = new SpaceShip();
-        ship.frame = frame3;
+        ship.frame = frame2;
 
         shipResist = ship.GetShipResist();
         shipSpeed = ship.GetShipSpeed();
@@ -98,6 +100,14 @@ public class PlayerBehaviour : MonoBehaviour
         GameObject rootShip = SpaceShipSpawner.Spawn(ship);
         rootShip.transform.position = this.transform.position;
         rootShip.transform.parent = this.transform;
+
+        pointer = Instantiate(pointerPrefab);
+
+        BlasterBehaviour[] blasters = rootShip.GetComponentsInChildren<BlasterBehaviour>();
+        foreach(BlasterBehaviour blaster in blasters)
+        {
+            blaster.SetNewAim(pointer.transform);
+        }
 
         Vector3 initPosCam = new Vector3(this.transform.position.x, this.transform.position.y, transform.position.z - distCamera);
         camera.transform.position = initPosCam;
@@ -112,6 +122,8 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 cursorPosition = Input.mousePosition;
         cursorPosition.z = distCamera;
         Vector3 cursorProjection = camera.ScreenToWorldPoint(cursorPosition);
+
+        pointer.transform.position = cursorProjection;
 
         //PLAYER POSITION & ROTATION ---------------
         Vector2 playerMovement = new Vector2();
