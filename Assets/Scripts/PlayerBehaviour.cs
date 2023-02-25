@@ -11,8 +11,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     public SpaceShip ship;
     public GameObject pointer;
+    private BlasterBehaviour[] blasters;
 
-    private float timer;
 
     private float shipResist;
     private float shipFirePower;
@@ -90,7 +90,7 @@ public class PlayerBehaviour : MonoBehaviour
         frame3.components = listComp3;
 
         ship = new SpaceShip();
-        ship.frame = frame2;
+        ship.frame = frame3;
 
         shipResist = ship.GetShipResist();
         shipSpeed = ship.GetShipSpeed();
@@ -103,7 +103,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         pointer = Instantiate(pointerPrefab);
 
-        BlasterBehaviour[] blasters = rootShip.GetComponentsInChildren<BlasterBehaviour>();
+        blasters = rootShip.GetComponentsInChildren<BlasterBehaviour>();
         foreach(BlasterBehaviour blaster in blasters)
         {
             blaster.SetNewAim(pointer.transform);
@@ -111,13 +111,10 @@ public class PlayerBehaviour : MonoBehaviour
 
         Vector3 initPosCam = new Vector3(this.transform.position.x, this.transform.position.y, transform.position.z - distCamera);
         camera.transform.position = initPosCam;
-        timer = 0.0f;
     }
 
     void Update()
     {
-        timer += Time.deltaTime;
-
         //Get Cursor projection in scene
         Vector3 cursorPosition = Input.mousePosition;
         cursorPosition.z = distCamera;
@@ -159,22 +156,12 @@ public class PlayerBehaviour : MonoBehaviour
 
         //CANON ----------------
 
-        bool isShooting;
-
-        isShooting = Input.GetMouseButton(0);
-        if(isShooting && timer > 0.2f)
+        if (Input.GetMouseButton(0))
         {
-            timer = 0.0f;
-            Vector3 dirToCursorBullet = cursorProjection - this.transform.position;
-            dirToCursorBullet = dirToCursorBullet.normalized;
-            float newAngleBullet = Mathf.Asin(Vector3.Dot(Vector3.Cross(Vector3.up, dirToCursorBullet), Vector3.fwd));
-            if (Vector3.Dot(Vector3.up, dirToCursorBullet) < 0)
+            foreach (BlasterBehaviour blaster in blasters)
             {
-                newAngleBullet = Mathf.PI - newAngleBullet;
+                blaster.Shoot();
             }
-            newAngleBullet = newAngleBullet * 180.0f / Mathf.PI;
-            float zerAngleBullet = GetAngleZeroCentered(newAngleBullet);
-            Shoot(zerAngleBullet);
         }
 
         //CAMERA ---------------
@@ -188,15 +175,6 @@ public class PlayerBehaviour : MonoBehaviour
 
         //Move Camera
         camera.transform.position = SmoothTranslation(camera.transform.position, vecPosCam, 300.0f, Time.deltaTime);                 // Formula to get camera movement 
-    }
-
-    public void Shoot(float angle)
-    {
-        GameObject newBullet = Instantiate(bulletPrefab);
-        newBullet.transform.position = transform.position;
-        Vector3 rot = newBullet.transform.rotation.eulerAngles;
-        rot.z = angle;
-        newBullet.transform.rotation = Quaternion.Euler(rot);
     }
 
     public Vector3 SmoothTranslation(Vector3 dep, Vector3 arr, float speed, float dt)
