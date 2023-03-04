@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlasterBehaviour : MonoBehaviour
+public class BlasterBehaviour : ComponentBehaviour
 {
+    [Header("Blaster Variables")]
     public GameObject blasterCanon;
     public Transform bulletSpawn;
     public GameObject bulletPrefab;

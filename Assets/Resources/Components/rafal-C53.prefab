@@ -98,6 +98,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbece35ff61bdcc469d25145b2a9576d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firePower: 45
+  forwSpeed: 0
+  latSpeed: 0
+  compResist: 60
+  weight: 20
   blasterCanon: {fileID: 8672764647316530049}
   bulletSpawn: {fileID: 7404370592367376259}
   bulletPrefab: {fileID: 1488073629091927856, guid: bcaae052d64288d4aab835459a7ed896, type: 3}

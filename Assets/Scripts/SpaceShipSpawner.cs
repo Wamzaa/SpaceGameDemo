@@ -12,8 +12,7 @@ public class SpaceShipSpawner : MonoBehaviour
 
         for(int i=0; i < ship.frame.components.Count; i++)
         {
-            ShipComponent comp = ship.frame.components[i];
-            GameObject component = Instantiate(Resources.Load<GameObject>("Components/" + comp.name), frame.transform);
+            GameObject component = Instantiate(Resources.Load<GameObject>("Components/" + ship.frame.components[i]), frame.transform);
             component.transform.position = frame.transform.GetChild(0).GetChild(i).transform.position;
         }
 

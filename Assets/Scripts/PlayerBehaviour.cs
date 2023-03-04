@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
@@ -11,8 +12,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     public SpaceShip ship;
     public GameObject pointer;
-    private BlasterBehaviour[] blasters;
 
+    private BlasterBehaviour[] blasters;
 
     private float shipResist;
     private float shipFirePower;
@@ -21,89 +22,63 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Start()
     {
-        ShipComponent geckoReactor = new ShipComponent();
-        geckoReactor.name = "geckoReactor";
-        geckoReactor.latSpeed = 0.0f;
-        geckoReactor.forwSpeed = 20.0f;
-        geckoReactor.firePower = 0.0f;
-        geckoReactor.compResist = 50.0f;
-        geckoReactor.weight = 15.0f;
-
-        ShipComponent chameleonReactor = new ShipComponent();
-        chameleonReactor.name = "chameleonReactor";
-        chameleonReactor.latSpeed = 7.0f;
-        chameleonReactor.forwSpeed = 7.0f;
-        chameleonReactor.firePower = 0.0f;
-        chameleonReactor.compResist = 40.0f;
-        chameleonReactor.weight = 10.0f;
-
-        ShipComponent rafalA12 = new ShipComponent();
-        rafalA12.name = "rafal-A12";
-        rafalA12.latSpeed = 0.0f;
-        rafalA12.forwSpeed = 0.0f;
-        rafalA12.firePower = 30.0f;
-        rafalA12.compResist = 40.0f;
-        rafalA12.weight = 10.0f;
-
-        ShipComponent rafalC53 = new ShipComponent();
-        rafalC53.name = "rafal-C53";
-        rafalC53.latSpeed = 0.0f;
-        rafalC53.forwSpeed = 0.0f;
-        rafalC53.firePower = 45.0f;
-        rafalC53.compResist = 60.0f;
-        rafalC53.weight = 20.0f;
-
         ShipFrame frame1 = new ShipFrame();
-        frame1.name = "basic44frame";
-        frame1.nbComponents = 4;
-        List<ShipComponent> listComp1 = new List<ShipComponent>();
-        listComp1.Add(geckoReactor);
-        listComp1.Add(geckoReactor);
-        listComp1.Add(rafalA12);
-        listComp1.Add(rafalA12);
+        frame1.name = "basic22frame";
+        List<string> listComp1 = new List<string>();
+        listComp1.Add("geckoReactor");
+        listComp1.Add("geckoReactor");
+        listComp1.Add("rafal-A12");
+        listComp1.Add("rafal-A12");
         frame1.components = listComp1;
 
+
         ShipFrame frame2 = new ShipFrame();
-        frame2.name = "basic44frame";
-        frame2.nbComponents = 4;
-        List<ShipComponent> listComp2 = new List<ShipComponent>();
-        listComp2.Add(chameleonReactor);
-        listComp2.Add(chameleonReactor); 
-        listComp2.Add(rafalC53);
-        listComp2.Add(rafalC53);
+        frame2.name = "basic22frame";
+        List<string> listComp2 = new List<string>();
+        listComp2.Add("chameleonReactor");
+        listComp2.Add("chameleonReactor");
+        listComp2.Add("rafal-C53");
+        listComp2.Add("rafal-C53");
         frame2.components = listComp2;
 
         ShipFrame frame3 = new ShipFrame();
         frame3.name = "y-shaped262frame";
-        frame3.nbComponents = 8;
-        List<ShipComponent> listComp3 = new List<ShipComponent>();
-        listComp3.Add(chameleonReactor);
-        listComp3.Add(geckoReactor);
-        listComp3.Add(chameleonReactor);
-        listComp3.Add(geckoReactor);
-        listComp3.Add(chameleonReactor);
-        listComp3.Add(chameleonReactor);
-        listComp3.Add(rafalC53);
-        listComp3.Add(rafalC53);
-        listComp3.Add(rafalA12);
-        listComp3.Add(rafalA12);
+        List<string> listComp3 = new List<string>();
+        listComp3.Add("chameleonReactor");
+        listComp3.Add("geckoReactor");
+        listComp3.Add("chameleonReactor");
+        listComp3.Add("geckoReactor");
+        listComp3.Add("chameleonReactor");
+        listComp3.Add("chameleonReactor");
+        listComp3.Add("rafal-C53");
+        listComp3.Add("rafal-C53");
+        listComp3.Add("rafal-A12");
+        listComp3.Add("rafal-A12");
         frame3.components = listComp3;
 
         ship = new SpaceShip();
-        ship.frame = frame3;
-
-        shipResist = ship.GetShipResist();
-        shipSpeed = ship.GetShipSpeed();
-        shipFirePower = ship.GetShipFirePower();
-        shipWeight = ship.GetShipWeight();
+        ship.frame = frame2;
 
         GameObject rootShip = SpaceShipSpawner.Spawn(ship);
         rootShip.transform.position = this.transform.position;
         rootShip.transform.parent = this.transform;
 
+        shipFirePower = 0.0f;
+        shipSpeed = Vector2.zero;
+        shipResist = 0.0f;
+        shipWeight = 0.0f;
+        blasters = rootShip.GetComponentsInChildren<BlasterBehaviour>();
+        ComponentBehaviour[] components = rootShip.GetComponentsInChildren<ComponentBehaviour>();
+        foreach (ComponentBehaviour component in components)
+        {
+            shipFirePower += component.firePower;
+            shipSpeed += new Vector2(component.forwSpeed, component.latSpeed);
+            shipResist += component.compResist;
+            shipWeight += component.weight;
+        }
+
         pointer = Instantiate(pointerPrefab);
 
-        blasters = rootShip.GetComponentsInChildren<BlasterBehaviour>();
         foreach(BlasterBehaviour blaster in blasters)
         {
             blaster.SetNewAim(pointer.transform);

@@ -214,6 +214,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbece35ff61bdcc469d25145b2a9576d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firePower: 30
+  forwSpeed: 0
+  latSpeed: 0
+  compResist: 40
+  weight: 10
   blasterCanon: {fileID: 9214933969366113680}
   bulletSpawn: {fileID: 7232696075478015621}
   bulletPrefab: {fileID: 1488073629091927856, guid: bcaae052d64288d4aab835459a7ed896, type: 3}

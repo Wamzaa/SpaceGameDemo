@@ -6,7 +6,6 @@ public class StaticEnemy : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Ayayaya");
         if (collision.gameObject.tag == "PlayerBullet")
         {
             Destroy(this.gameObject);
