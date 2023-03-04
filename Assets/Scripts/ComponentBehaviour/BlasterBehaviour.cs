@@ -19,18 +19,21 @@ public class BlasterBehaviour : ComponentBehaviour
 
     private void Update()
     {
-        timer += Time.deltaTime;
-        Vector3 dirToAim = aim.position - this.transform.position;
-        dirToAim = dirToAim.normalized;
-        float newAngle = Mathf.Asin(Vector3.Dot(Vector3.Cross(blasterCanon.transform.up, dirToAim), Vector3.fwd));
-        if (Vector3.Dot(transform.up, dirToAim) < 0)
+        if(aim != null)
         {
-            newAngle = Mathf.PI - newAngle;
+            timer += Time.deltaTime;
+            Vector3 dirToAim = aim.position - this.transform.position;
+            dirToAim = dirToAim.normalized;
+            float newAngle = Mathf.Asin(Vector3.Dot(Vector3.Cross(blasterCanon.transform.up, dirToAim), Vector3.fwd));
+            if (Vector3.Dot(transform.up, dirToAim) < 0)
+            {
+                newAngle = Mathf.PI - newAngle;
+            }
+            newAngle = newAngle * 180.0f / Mathf.PI;
+            Vector3 rot = blasterCanon.transform.rotation.eulerAngles;
+            rot.z = SmoothRotation(rot.z, newAngle, 5.0f, Time.deltaTime);
+            blasterCanon.transform.rotation = Quaternion.Euler(rot);
         }
-        newAngle = newAngle * 180.0f / Mathf.PI;
-        Vector3 rot = blasterCanon.transform.rotation.eulerAngles;
-        rot.z = SmoothRotation(rot.z, newAngle, 5.0f, Time.deltaTime);
-        blasterCanon.transform.rotation = Quaternion.Euler(rot);
     }
 
     public void Shoot()

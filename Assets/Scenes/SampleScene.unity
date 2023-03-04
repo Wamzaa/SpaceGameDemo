@@ -358,7 +358,6 @@ MonoBehaviour:
   ship:
     frame:
       name: 
-      nbComponents: 0
       components: []
   pointer: {fileID: 0}
 --- !u!212 &480433643
