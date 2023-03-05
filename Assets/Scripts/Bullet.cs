@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        transform.position = transform.position + 15.0f * Time.deltaTime * transform.up;
+        transform.position = transform.position + 22.0f * Time.deltaTime * transform.up;
 
         timer += Time.deltaTime;
         if(timer > 20.0f)

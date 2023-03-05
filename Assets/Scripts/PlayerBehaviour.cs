@@ -90,66 +90,69 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Update()
     {
-        //Get Cursor projection in scene
-        Vector3 cursorPosition = Input.mousePosition;
-        cursorPosition.z = distCamera;
-        Vector3 cursorProjection = camera.ScreenToWorldPoint(cursorPosition);
-
-        pointer.transform.position = cursorProjection;
-
-        //PLAYER POSITION & ROTATION ---------------
-        Vector2 playerMovement = new Vector2();
-
-        if (Input.GetKey(KeyCode.Z))
+        if(UIManager.Instance.isInGame)
         {
-            playerMovement.y += 1.0f;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            playerMovement.y -= 1.0f;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            playerMovement.x += 1.0f;
-        }
-        if (Input.GetKey(KeyCode.Q))
-        {
-            playerMovement.x -= 1.0f;
-        }
+            //Get Cursor projection in scene
+            Vector3 cursorPosition = Input.mousePosition;
+            cursorPosition.z = distCamera;
+            Vector3 cursorProjection = camera.ScreenToWorldPoint(cursorPosition);
 
-        float rotSpeed = shipSpeed.y;
-        if(playerMovement.y != 0.0f)
-        {
-            rotSpeed = Mathf.Sign(playerMovement.y) * 3.0f * shipSpeed.y ;
-        }
-        Vector3 rotVec = transform.rotation.eulerAngles;
-        rotVec.z += rotSpeed * Time.deltaTime * (- playerMovement.x);
-        this.transform.rotation = Quaternion.Euler(rotVec);
+            pointer.transform.position = cursorProjection;
 
-        Vector3 moveVec = shipSpeed.x * Time.deltaTime * (playerMovement.y * transform.up);
-        this.transform.position += moveVec;
+            //PLAYER POSITION & ROTATION ---------------
+            Vector2 playerMovement = new Vector2();
 
-        //CANON ----------------
-
-        if (Input.GetMouseButton(0))
-        {
-            foreach (BlasterBehaviour blaster in blasters)
+            if (Input.GetKey(KeyCode.Z))
             {
-                blaster.Shoot();
+                playerMovement.y += 1.0f;
             }
+            if (Input.GetKey(KeyCode.S))
+            {
+                playerMovement.y -= 1.0f;
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                playerMovement.x += 1.0f;
+            }
+            if (Input.GetKey(KeyCode.Q))
+            {
+                playerMovement.x -= 1.0f;
+            }
+
+            float rotSpeed = shipSpeed.y;
+            if (playerMovement.y != 0.0f)
+            {
+                rotSpeed = Mathf.Sign(playerMovement.y) * 3.0f * shipSpeed.y;
+            }
+            Vector3 rotVec = transform.rotation.eulerAngles;
+            rotVec.z += rotSpeed * Time.deltaTime * (-playerMovement.x);
+            this.transform.rotation = Quaternion.Euler(rotVec);
+
+            Vector3 moveVec = shipSpeed.x * Time.deltaTime * (playerMovement.y * transform.up);
+            this.transform.position += moveVec;
+
+            //CANON ----------------
+
+            if (Input.GetMouseButton(0))
+            {
+                foreach (BlasterBehaviour blaster in blasters)
+                {
+                    blaster.Shoot();
+                }
+            }
+
+            //CAMERA ---------------
+
+            //Get Camera position
+            Vector3 vecPlayerCursor = cursorProjection - this.transform.position;
+            float lenPosCam = Mathf.Min(3.0f, 0.5f * vecPlayerCursor.magnitude);               // Formula to get Camera position from cursor projection
+                                                                                               // We need a value (< 1 * x) otherwise it move to fast
+            Vector3 vecPosCam = transform.position + lenPosCam * vecPlayerCursor.normalized;
+            vecPosCam.z = transform.position.z - distCamera;
+
+            //Move Camera
+            camera.transform.position = SmoothTranslation(camera.transform.position, vecPosCam, 300.0f, Time.deltaTime);                 // Formula to get camera movement 
         }
-
-        //CAMERA ---------------
-
-        //Get Camera position
-        Vector3 vecPlayerCursor = cursorProjection - this.transform.position;
-        float lenPosCam = Mathf.Min(3.0f, 0.5f * vecPlayerCursor.magnitude);               // Formula to get Camera position from cursor projection
-                                                                                           // We need a value (< 1 * x) otherwise it move to fast
-        Vector3 vecPosCam = transform.position + lenPosCam * vecPlayerCursor.normalized;
-        vecPosCam.z = transform.position.z - distCamera;
-
-        //Move Camera
-        camera.transform.position = SmoothTranslation(camera.transform.position, vecPosCam, 300.0f, Time.deltaTime);                 // Formula to get camera movement 
     }
 
     public Vector3 SmoothTranslation(Vector3 dep, Vector3 arr, float speed, float dt)
