@@ -16,12 +16,4 @@ public class StaticEnemy : EnemyBehaviour
 
         return ship;
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "PlayerBullet")
-        {
-            Destroy(this.gameObject);
-        }
-    }
 }

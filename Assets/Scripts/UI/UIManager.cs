@@ -27,6 +27,7 @@ public class UIManager : MonoBehaviour
         SetGameMode(true);
     }
 
+
     public void SetGameMode(bool _isInGame)
     {
         isInGame = _isInGame;

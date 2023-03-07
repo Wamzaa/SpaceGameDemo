@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public float power;
+
     private float timer;
 
     private void Start()
@@ -19,6 +21,18 @@ public class Bullet : MonoBehaviour
         if(timer > 20.0f)
         {
             Destroy(this.gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag != this.gameObject.tag)
+        {
+            ComponentBehaviour comp = collision.gameObject.GetComponent<ComponentBehaviour>();
+            if(comp != null)
+            {
+
+            }
         }
     }
 }

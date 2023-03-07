@@ -57,7 +57,7 @@ public class PlayerBehaviour : MonoBehaviour
         frame3.components = listComp3;
 
         ship = new SpaceShip();
-        ship.frame = frame2;
+        ship.frame = frame3;
 
         GameObject rootShip = SpaceShipSpawner.Spawn(ship);
         rootShip.transform.position = this.transform.position;
@@ -90,7 +90,12 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Update()
     {
-        if(UIManager.Instance.isInGame)
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            UIManager.Instance.SetGameMode(!UIManager.Instance.isInGame);
+        }
+
+        if (UIManager.Instance.isInGame)
         {
             //Get Cursor projection in scene
             Vector3 cursorPosition = Input.mousePosition;

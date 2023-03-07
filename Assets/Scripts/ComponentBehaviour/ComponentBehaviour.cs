@@ -10,4 +10,7 @@ public class ComponentBehaviour : MonoBehaviour
     public float latSpeed;
     public float compResist;
     public float weight;
+
+    private GameObject ship;
+    private float currentHealth;
 }
