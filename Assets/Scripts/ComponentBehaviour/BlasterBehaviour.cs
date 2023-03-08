@@ -19,7 +19,7 @@ public class BlasterBehaviour : ComponentBehaviour
 
     private void Update()
     {
-        if(aim != null)
+        if (aim != null)
         {
             timer += Time.deltaTime;
             Vector3 dirToAim = aim.position - this.transform.position;
@@ -55,6 +55,8 @@ public class BlasterBehaviour : ComponentBehaviour
             Vector3 rot = newBullet.transform.rotation.eulerAngles;
             rot.z = zerAngleBullet;
             newBullet.transform.rotation = Quaternion.Euler(rot);
+            newBullet.tag = this.gameObject.tag;
+            newBullet.GetComponent<Bullet>().power = firePower;
         }
     }
 

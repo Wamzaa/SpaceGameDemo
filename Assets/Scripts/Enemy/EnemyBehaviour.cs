@@ -15,7 +15,7 @@ public abstract class EnemyBehaviour : MonoBehaviour
     {
         ship = GenerateShipData();
 
-        GameObject rootShip = SpaceShipSpawner.Spawn(ship);
+        GameObject rootShip = SpaceShipSpawner.Spawn(ship, false);
         rootShip.transform.position = this.transform.position;
         rootShip.transform.parent = this.transform;
 

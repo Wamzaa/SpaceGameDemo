@@ -25,10 +25,10 @@ public class PlayerBehaviour : MonoBehaviour
         ShipFrame frame1 = new ShipFrame();
         frame1.name = "basic22frame";
         List<string> listComp1 = new List<string>();
-        listComp1.Add("geckoReactor");
-        listComp1.Add("geckoReactor");
         listComp1.Add("rafal-A12");
-        listComp1.Add("rafal-A12");
+        //listComp1.Add("rafal-C53");
+        listComp1.Add("geckoReactor");
+        listComp1.Add("chameleonReactor");
         frame1.components = listComp1;
 
 
@@ -57,9 +57,9 @@ public class PlayerBehaviour : MonoBehaviour
         frame3.components = listComp3;
 
         ship = new SpaceShip();
-        ship.frame = frame3;
+        ship.frame = frame1;
 
-        GameObject rootShip = SpaceShipSpawner.Spawn(ship);
+        GameObject rootShip = SpaceShipSpawner.Spawn(ship, true);
         rootShip.transform.position = this.transform.position;
         rootShip.transform.parent = this.transform;
 

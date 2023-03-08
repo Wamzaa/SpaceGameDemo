@@ -26,12 +26,14 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag != this.gameObject.tag)
+        bool hit = (collision.tag == "Ally" && this.gameObject.tag == "Enemy") || (collision.tag == "Enemy" && this.gameObject.tag == "Ally");
+        Debug.Log(hit + " --- " + collision.name);
+        if (hit)
         {
             ComponentBehaviour comp = collision.gameObject.GetComponent<ComponentBehaviour>();
             if(comp != null)
             {
-
+                comp.TakeDamage(power);
             }
         }
     }
