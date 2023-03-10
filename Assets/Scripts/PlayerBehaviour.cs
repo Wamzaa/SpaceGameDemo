@@ -57,7 +57,7 @@ public class PlayerBehaviour : MonoBehaviour
         frame3.components = listComp3;
 
         ship = new SpaceShip();
-        ship.frame = frame1;
+        ship.frame = frame3;
 
         GameObject rootShip = SpaceShipSpawner.Spawn(ship, true);
         rootShip.transform.position = this.transform.position;
