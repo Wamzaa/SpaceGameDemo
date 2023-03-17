@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     public Camera camera;
-    public float distCamera;
+    public int zoomLevel;
     public GameObject bulletPrefab;
     public GameObject pointerPrefab;
 
@@ -35,10 +35,10 @@ public class PlayerBehaviour : MonoBehaviour
         ShipFrame frame2 = new ShipFrame();
         frame2.name = "basic22frame";
         List<string> listComp2 = new List<string>();
-        listComp2.Add("chameleonReactor");
-        listComp2.Add("chameleonReactor");
-        listComp2.Add("rafal-C53");
-        listComp2.Add("rafal-C53");
+        listComp2.Add("geckoReactor");
+        listComp2.Add("geckoReactor");
+        listComp2.Add("geckoReactor");
+        listComp2.Add("geckoReactor");
         frame2.components = listComp2;
 
         ShipFrame frame3 = new ShipFrame();
@@ -77,6 +77,8 @@ public class PlayerBehaviour : MonoBehaviour
             shipWeight += component.weight;
         }
 
+        shipSpeed = shipSpeed / Mathf.Sqrt(shipWeight);
+
         pointer = Instantiate(pointerPrefab);
 
         foreach(BlasterBehaviour blaster in blasters)
@@ -84,7 +86,7 @@ public class PlayerBehaviour : MonoBehaviour
             blaster.SetNewAim(pointer.transform);
         }
 
-        Vector3 initPosCam = new Vector3(this.transform.position.x, this.transform.position.y, transform.position.z - distCamera);
+        Vector3 initPosCam = new Vector3(this.transform.position.x, this.transform.position.y, transform.position.z - GetZoomDistance(zoomLevel));
         camera.transform.position = initPosCam;
     }
 
@@ -99,7 +101,7 @@ public class PlayerBehaviour : MonoBehaviour
         {
             //Get Cursor projection in scene
             Vector3 cursorPosition = Input.mousePosition;
-            cursorPosition.z = distCamera;
+            cursorPosition.z = GetZoomDistance(zoomLevel);
             Vector3 cursorProjection = camera.ScreenToWorldPoint(cursorPosition);
 
             pointer.transform.position = cursorProjection;
@@ -125,10 +127,10 @@ public class PlayerBehaviour : MonoBehaviour
             }
 
             float rotSpeed = shipSpeed.y;
-            if (playerMovement.y != 0.0f)
+            /*if (playerMovement.y != 0.0f)
             {
                 rotSpeed = Mathf.Sign(playerMovement.y) * 3.0f * shipSpeed.y;
-            }
+            }*/
             Vector3 rotVec = transform.rotation.eulerAngles;
             rotVec.z += rotSpeed * Time.deltaTime * (-playerMovement.x);
             this.transform.rotation = Quaternion.Euler(rotVec);
@@ -148,16 +150,36 @@ public class PlayerBehaviour : MonoBehaviour
 
             //CAMERA ---------------
 
+            
+
+            float scrollDelta = Input.mouseScrollDelta.y;
+            if(scrollDelta != 0)
+            {
+                zoomLevel = (int) Mathf.Min(10, Mathf.Max(0, zoomLevel + scrollDelta));
+            }
+
             //Get Camera position
             Vector3 vecPlayerCursor = cursorProjection - this.transform.position;
             float lenPosCam = Mathf.Min(3.0f, 0.5f * vecPlayerCursor.magnitude);               // Formula to get Camera position from cursor projection
                                                                                                // We need a value (< 1 * x) otherwise it move to fast
             Vector3 vecPosCam = transform.position + lenPosCam * vecPlayerCursor.normalized;
-            vecPosCam.z = transform.position.z - distCamera;
+            vecPosCam.z = transform.position.z - GetZoomDistance(zoomLevel);
 
             //Move Camera
             camera.transform.position = SmoothTranslation(camera.transform.position, vecPosCam, 300.0f, Time.deltaTime);                 // Formula to get camera movement 
         }
+    }
+
+    public float GetZoomDistance(int zoomLevel)
+    {
+        float maxZoom = 20.0f;
+        float minZoom = 3.0f;
+        int maxLevel = 10;
+        int minLevel = 1;
+
+        float res = (maxZoom - minZoom) * (Mathf.Exp(zoomLevel) - Mathf.Exp(minLevel)) / (Mathf.Exp(maxLevel) - Mathf.Exp(minLevel)) + minZoom;
+        Debug.Log(res);
+        return res;
     }
 
     public Vector3 SmoothTranslation(Vector3 dep, Vector3 arr, float speed, float dt)
